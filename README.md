@@ -3,6 +3,8 @@
   
  [![NPM](https://nodei.co/npm/apache-log2.png?downloads=true)](https://nodei.co/npm/apache-log2/)
 
+**FORKED FROM [https://github.com/rfalke/apache-log2](https://github.com/rfalke/apache-log2) to add support of logging to stdout.**
+
 **Author:** Raimar Falke
 
 **Licence:** GNU GENERAL PUBLIC LICENSE Version 3

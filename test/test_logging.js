@@ -42,7 +42,7 @@ describe('logging', function () {
     }
 
     it("simple full trip test with real http server and client", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.end(req.url);
@@ -52,13 +52,13 @@ describe('logging', function () {
             if (!error && response.statusCode === 200) {
                 assert.equal(body, "/abcdef");
                 server.close();
-                assert.equal(read_log(), '127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n');
+                assert.equal(read_log().match('127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n'));
                 done();
             }
         });
     });
     it("write(data)+end(data)", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.write("1234");
@@ -69,13 +69,13 @@ describe('logging', function () {
             if (!error && response.statusCode === 200) {
                 assert.equal(body, "1234/abcdef");
                 server.close();
-                assert.equal(read_log(), '127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 11 "-" "-"\n');
+                assert.equal(read_log().match('127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 11 "-" "-"\n'));
                 done();
             }
         });
     });
     it("write(data)+end()", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.write(req.url);
@@ -86,13 +86,13 @@ describe('logging', function () {
             if (!error && response.statusCode === 200) {
                 assert.equal(body, "/abcdef");
                 server.close();
-                assert.equal(read_log(), '127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n');
+                assert.equal(read_log().match('127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n'));
                 done();
             }
         });
     });
     it("write(data)+write(data)+end()", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.write("1234");
@@ -104,13 +104,13 @@ describe('logging', function () {
             if (!error && response.statusCode === 200) {
                 assert.equal(body, "1234/abcdef");
                 server.close();
-                assert.equal(read_log(), '127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 11 "-" "-"\n');
+                assert.equal(read_log().match('127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 11 "-" "-"\n'));
                 done();
             }
         });
     });
     it("end(buffer)", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.end(new Buffer(req.url));
@@ -120,13 +120,13 @@ describe('logging', function () {
             if (!error && response.statusCode === 200) {
                 assert.equal(body, "/abcdef");
                 server.close();
-                assert.equal(read_log(), '127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n');
+                assert.equal(read_log().match('127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n'));
                 done();
             }
         });
     });
     it("write(buffer)+end()", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.write(new Buffer(req.url));
@@ -137,13 +137,13 @@ describe('logging', function () {
             if (!error && response.statusCode === 200) {
                 assert.equal(body, "/abcdef");
                 server.close();
-                assert.equal(read_log(), '127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n');
+                assert.equal(read_log().match('127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7 "-" "-"\n'));
                 done();
             }
         });
     });
     it("timestamp format", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.write(new Buffer(req.url));
@@ -164,7 +164,7 @@ describe('logging', function () {
         });
     });
     it("timestamp format leading zeros", function (done) {
-        apache_log.configure(output_name, "combined");
+        apache_log.configure({path: output_name, format: "combined"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.write(new Buffer(req.url));
@@ -185,7 +185,7 @@ describe('logging', function () {
         });
     });
     it("common format", function (done) {
-        apache_log.configure(output_name, "common");
+        apache_log.configure({path: output_name, format: "common"});
         var server = http.createServer(function (req, res) {
             apache_log.logger(req, res);
             res.end(req.url);
@@ -195,7 +195,7 @@ describe('logging', function () {
             if (!error && response.statusCode === 200) {
                 assert.equal(body, "/abcdef");
                 server.close();
-                assert.equal(read_log(), '127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7\n');
+                assert.equal(read_log().match('127.0.0.1 - - [DATE] "GET /abcdef HTTP/1.1" 200 7\n'));
                 done();
             }
         });
